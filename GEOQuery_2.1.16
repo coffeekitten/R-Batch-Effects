@@ -8,6 +8,8 @@ GEOQuery is used for collecting data off of the NCBI GEO website into R. Each us
 
 The dataset below downloading expressionset data on lung tissue samples from Texas. The data will down load as a list. But it is important to format it into an expression set which will allow for easier data manipulation.   
 
+## This is a comment to show that the file changed
+
 ## gse <- getGEO("GSE1643",GSEMatrix=FALSE)
 
 To start converting a gse to an expression set use the code below. 
