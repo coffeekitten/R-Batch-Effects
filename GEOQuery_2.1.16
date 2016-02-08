@@ -59,3 +59,41 @@ eset2
 ##And the output should be the data formated. For the second data set from NCBI GEO I put the code below without the explainations. Using the same process the secons data set is reformated into an expression set. 
 
 gse1 <- getGEO("GSE51024",GSEMatrix=FALSE)
+
+gsmplatforms1 <-lapply(GSMList(gse1),function(x){Meta(x)$platform})
+
+head(gsmplatforms1) 
+
+gsmlist1 = Filter(function(gsm){Meta(gsm)$platform=='GPL570'},GSMList(gse1))
+length(gsmlist1)
+
+Columns(gsmlist1[[1]])[1:5,]
+
+Table(gsmlist1[[1]])[1:5,]
+
+probesets1 <- Table(GPLList(gse1)[[1]])$ID
+
+data.matrix1 <- do.call('cbind',lapply(gsmlist1,function(x) 
+                                      {tab <- Table(x)
+                                       mymatch <- match(probesets1,tab$ID_REF)
+                                       return(tab$VALUE[mymatch])
+                                     }))
+data.matrix1 <- apply(data.matrix1,2,function(x) {as.numeric(as.character(x))})
+data.matrix1 <- log2(data.matrix1)
+data.matrix1[1:5,]
+
+require(Biobase)
+
+rownames(data.matrix1) <- probesets1
+
+colnames(data.matrix1) <- names(gsmlist1)
+
+pdata1 <- data.frame(samples=names(gsmlist1))
+
+rownames(pdata1) <- names(gsmlist1)
+
+pheno1 <- as(pdata1,"AnnotatedDataFrame")
+
+eset3 <- new('ExpressionSet',exprs=data.matrix1,phenoData=pheno1)
+
+eset3
