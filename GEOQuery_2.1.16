@@ -107,7 +107,7 @@ eset2
 
 ## This is the code to access the third dataset with 65 samples with 42 normal samples.
 
-gse3 <- getGEO("GDS4794",GSEMatrix=FALSE)
+gse3 <- getGEO("GSE27262",GSEMatrix=FALSE)
 
 gsmplatforms3 <-lapply(GSMList(gse3),function(x){Meta(x)$platform})
 
@@ -149,7 +149,7 @@ eset3
 
 ## Code below is for the third dataset. 
 
-gse4 <- getGEO("GDS1673",GSEMatrix=FALSE)
+gse4 <- getGEO("GSE40367",GSEMatrix=FALSE)
 
 gsmplatforms4 <-lapply(GSMList(gse4),function(x){Meta(x)$platform})
 
