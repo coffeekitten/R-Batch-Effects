@@ -13,7 +13,7 @@ biocLite()
 
 biocLite("GEOquery")
 
-##The dataset below downloading expressionset data on lung tissue samples from Texas. The data will down load as a list. But it is important to format it into an expression set which will allow for easier data manipulation.   
+##The dataset below downloading expressionset data on lung tissue samples from Texas. The data will down load as a list. But it is important to format it into an expression set which will allow for easier data manipulation.This data has 40 normal samples.   
 
 gse1 <- getGEO("GSE1643",GSEMatrix=FALSE)
 
@@ -63,7 +63,7 @@ pheno1 <- as(pdata1,"AnnotatedDataFrame")
 eset1 <- new('ExpressionSet',exprs=data.matrix1,phenoData=pheno1)
 eset1
 
-##And the output should be the data formated. For the second data set from NCBI GEO I put the code below without the explainations. Using the same process the second data set is reformated into an expression set. 
+##And the output should be the data formated. For the second data set from NCBI GEO I put the code below without the explainations. Using the same process the second data set is reformated into an expression set. This set has 96 samples with 46 normal samples. 
 
 gse2 <- getGEO("GSE51024",GSEMatrix=FALSE)
 
@@ -105,7 +105,7 @@ eset2 <- new('ExpressionSet',exprs=data.matrix2,phenoData=pheno2)
 
 eset2
 
-## This is the code to access the third dataset with 65 samples with 42 normal samples.
+## This is the code to access the third dataset with 50 samples and 25 normal samples.
 
 gse3 <- getGEO("GSE27262",GSEMatrix=FALSE)
 
@@ -147,9 +147,9 @@ eset3 <- new('ExpressionSet',exprs=data.matrix3,phenoData=pheno3)
 
 eset3
 
-## Code below is for the third dataset. 
+## Code below is for the fourth dataset with 61 samples and 21 normal samples.   
 
-gse4 <- getGEO("GSE40367",GSEMatrix=FALSE)
+gse4 <- getGEO("GSE33532",GSEMatrix=FALSE)
 
 gsmplatforms4 <-lapply(GSMList(gse4),function(x){Meta(x)$platform})
 
