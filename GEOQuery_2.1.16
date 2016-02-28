@@ -147,45 +147,4 @@ eset3 <- new('ExpressionSet',exprs=data.matrix3,phenoData=pheno3)
 
 eset3
 
-## Code below is for the fourth dataset with 61 samples and 21 normal samples.   
-
-gse4 <- getGEO("GSE33532",GSEMatrix=FALSE)
-
-gsmplatforms4 <-lapply(GSMList(gse4),function(x){Meta(x)$platform})
-
-head(gsmplatforms4) 
-
-gsmlist4 = Filter(function(gsm){Meta(gsm)$platform=='GPL570'},GSMList(gse4))
-length(gsmlist4)
-
-Columns(gsmlist4[[1]])[1:5,]
-
-Table(gsmlist4[[1]])[1:5,]
-
-probesets4 <- Table(GPLList(gse4)[[1]])$ID
-
-data.matrix4 <- do.call('cbind',lapply(gsmlist4,function(x) 
-                                      {tab <- Table(x)
-                                       mymatch <- match(probesets4,tab$ID_REF)
-                                       return(tab$VALUE[mymatch])
-                                     }))
-data.matrix4 <- apply(data.matrix4,2,function(x) {as.numeric(as.character(x))})
-data.matrix4 <- log2(data.matrix4)
-data.matrix4[1:5,]
-
-require(Biobase)
-
-rownames(data.matrix4) <- probesets4
-
-colnames(data.matrix4) <- names(gsmlist4)
-
-pdata4 <- data.frame(samples=names(gsmlist4))
-
-rownames(pdata4) <- names(gsmlist4)
-
-pheno4 <- as(pdata4,"AnnotatedDataFrame")
-
-eset4 <- new('ExpressionSet',exprs=data.matrix4,phenoData=pheno4)
-
-eset4
 
