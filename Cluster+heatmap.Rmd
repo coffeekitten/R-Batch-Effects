@@ -1,0 +1,46 @@
+---
+title: "Heatmaps"
+author: "Jessica Phung"
+date: "February 21, 2016"
+output: html_document
+---
+
+## The two steps are to combine two datasets and make a heatmap. The code below will combine two of the expression sets. If batch effects are present there should be 'clusters' of different shades of color. If there is a lack of batch effects most of the data will have a similar coloration and should look like a near unified shade.
+
+## The code below will establish what each eset looks like. 
+```{r}
+library(Biobase)
+heatmap(exprs(var.feset1[1:40]))
+```
+
+```{r, eval=FALSE}
+heatmap(exprs(var.feset2[1:96]))
+
+heatmap(exprs(var.feset3[1:50]))
+```
+
+##Combine two expression sets (var.functioneset1, var.feset2) then make a heatmap.
+var.feset1.2<-combine(var.feset1,var.feset2)
+
+heatmapvar.feset1.2<-heatmap(exprs(var.feset1.2[1:136]))
+
+##Repeat steps for the other esets paired with eset1. 
+
+var.feset1.3<-combine(var.feset1,var.feset3)
+
+heatmapvar.feset1.3<-heatmap(exprs(var.feset1.3[1:90]))
+
+## Pair up esets 2 and 3.
+
+var.feset2.3<-combine(var.feset2,var.feset3)
+
+heatmapvar.feset2.3<-heatmap(exprs(var.feset2.3[1:146]))
+
+## The heatmaps should show up on the left under 'plots' and can be coverted to an image or pda. The batch effects should be very clear in the heatmaps. 
+
+
+
+
+
+
+
