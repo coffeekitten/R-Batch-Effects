@@ -1,0 +1,243 @@
+---
+title: "Full Workflow Human Lung Samples"
+author: "Jessica Phung"
+date: "February 28, 2016"
+output: html_document
+---
+
+##Bioconductor is a company that is an open source for bioinformatics. The code below allows for access to the packages off biocoductor. 
+
+```{r eva=FALSE} 
+source("https://bioconductor.org/biocLite.R")
+biocLite()
+```
+
+##GEOquery is a package for collecting data off of the NCBI GEO website into R. Each user uploaded dataset has its own GEO accession idenifier which is inputed in the function getGEO function.
+
+```{r}
+biocLite("GEOquery")
+```
+
+##The dataset below downloading expressionset data on lung tissue samples from Texas. The data will down load as a list. But it is important to format it into an expression set which will allow for easier data manipulation.This data has 40 normal samples.   
+
+```{r}
+gse1 <- getGEO("GSE1643",GSEMatrix=FALSE)
+```
+
+##To start converting a gse to an expression set use the code below. 
+
+```{r}
+gsmplatforms1 <-lapply(GSMList(gse1),function(x){Meta(x)$platform})
+head(gsmplatforms1) 
+```
+
+##This should show you the platforms the data was collected on. A platform is the method they used to collect their data. 
+
+##If your data has more than one platform you can filter out columns of data you don't want. In this case we want the GPL570 platform.
+
+```{r}
+gsmlist1 = Filter(function(gsm){Meta(gsm)$platform=='GPL570'},GSMList(gse1))
+length(gsmlist1)
+```
+
+##All the samples should be one platform so the step above was to double check all the data was that same.
+##To check the column desciptions do this below. 
+
+```{r}
+Columns(gsmlist1[[1]])[1:5,]
+```
+## Check rows
+
+```{r}
+Table(gsmlist1[[1]])[1:5,]
+```
+##This is how to get the probe ordering.
+
+```{r}
+probesets1 <- Table(GPLList(gse1)[[1]])$ID
+```
+
+## Make a data matrix and log the data.
+
+```{r}
+data.matrix1 <- do.call('cbind',lapply(gsmlist1,function(x) 
+                                      {tab <- Table(x)
+                                       mymatch <- match(probesets1,tab$ID_REF)
+                                       return(tab$VALUE[mymatch])
+                                     }))
+data.matrix1 <- apply(data.matrix1,2,function(x) {as.numeric(as.character(x))})
+data.matrix1 <- log2(data.matrix1)
+data.matrix1[1:5,]
+```
+
+##Now to put it all together into an expression set, use the code below. 
+
+```{r}
+require(Biobase)
+rownames(data.matrix1) <- probesets1
+colnames(data.matrix1) <- names(gsmlist1)
+pdata1 <- data.frame(samples=names(gsmlist1))
+rownames(pdata1) <- names(gsmlist1)
+pheno1 <- as(pdata1,"AnnotatedDataFrame")
+eset1 <- new('ExpressionSet',exprs=data.matrix1,phenoData=pheno1)
+eset1
+```
+
+##And the output should be the data formated. For the second data set from NCBI GEO I put the code below without the explainations. Using the same process the second data set is reformated into an expression set. This set has 96 samples with 46 normal samples. 
+
+```{r}
+gse2 <- getGEO("GSE51024",GSEMatrix=FALSE)
+
+gsmplatforms2 <-lapply(GSMList(gse2),function(x){Meta(x)$platform})
+
+head(gsmplatforms2) 
+
+gsmlist2 = Filter(function(gsm){Meta(gsm)$platform=='GPL570'},GSMList(gse2))
+length(gsmlist2)
+
+Columns(gsmlist2[[1]])[1:5,]
+
+Table(gsmlist2[[1]])[1:5,]
+
+probesets2 <- Table(GPLList(gse2)[[1]])$ID
+
+data.matrix2 <- do.call('cbind',lapply(gsmlist2,function(x) 
+                                      {tab <- Table(x)
+                                       mymatch <- match(probesets2,tab$ID_REF)
+                                       return(tab$VALUE[mymatch])
+                                     }))
+data.matrix2 <- apply(data.matrix2,2,function(x) {as.numeric(as.character(x))})
+data.matrix2 <- log2(data.matrix2)
+data.matrix2[1:5,]
+
+require(Biobase)
+
+rownames(data.matrix2) <- probesets2
+
+colnames(data.matrix2) <- names(gsmlist2)
+
+pdata2 <- data.frame(samples=names(gsmlist2))
+
+rownames(pdata2) <- names(gsmlist2)
+
+pheno2 <- as(pdata2,"AnnotatedDataFrame")
+
+eset2 <- new('ExpressionSet',exprs=data.matrix2,phenoData=pheno2)
+
+eset2
+```
+
+## This is the code to access the third dataset with 50 samples and 25 normal samples.
+
+```{r}
+gse3 <- getGEO("GSE27262",GSEMatrix=FALSE)
+
+gsmplatforms3 <-lapply(GSMList(gse3),function(x){Meta(x)$platform})
+
+head(gsmplatforms3) 
+
+gsmlist3 = Filter(function(gsm){Meta(gsm)$platform=='GPL570'},GSMList(gse3))
+length(gsmlist3)
+
+Columns(gsmlist3[[1]])[1:5,]
+
+Table(gsmlist3[[1]])[1:5,]
+
+probesets3 <- Table(GPLList(gse3)[[1]])$ID
+
+data.matrix3 <- do.call('cbind',lapply(gsmlist3,function(x) 
+                                      {tab <- Table(x)
+                                       mymatch <- match(probesets3,tab$ID_REF)
+                                       return(tab$VALUE[mymatch])
+                                     }))
+data.matrix3 <- apply(data.matrix3,2,function(x) {as.numeric(as.character(x))})
+data.matrix3 <- log2(data.matrix3)
+data.matrix3[1:5,]
+
+require(Biobase)
+
+rownames(data.matrix3) <- probesets3
+
+colnames(data.matrix3) <- names(gsmlist3)
+
+pdata3 <- data.frame(samples=names(gsmlist3))
+
+rownames(pdata3) <- names(gsmlist3)
+
+pheno3 <- as(pdata3,"AnnotatedDataFrame")
+
+eset3 <- new('ExpressionSet',exprs=data.matrix3,phenoData=pheno3)
+
+eset3
+```
+
+##Filtering out the experimental data or non-normal data has to be done before any other filters are implimented. NCBI GEO is used to identify which coulmns are controls, the webpage should list which samples are "normal" in the links at bottom of each dataset's page. One of the datasets do not need to be filtered () due to the fact that all samples are "normal" as listed on NCBI GEO.   
+
+```{r}
+eset1controls<-eset1
+```
+
+## The expression set "eset2" has normal samples every even column thus the code below will delete every noncontrol. 
+
+```{r}
+eset2controls<-eset2[,!as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
+```
+
+## The expression set "eset3" has normal samples every other column as well.
+
+```{r}
+eset3controls<-eset3[,!as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
+```
+
+## The three steps are to combine two datasets, filter the data, and make a heatmap. The code below will combine two of the expression sets. If batch effects are present there should be 'clusters' of different shades of color. If there is a lack of batch effects most of the data will have a similar coloration and should look like a near unified shade.
+
+## Varaince filtering is done to the data to get rid of uninteresting data. Data that has no vairance or very little variance will not show up on a heat-map. Thus after combining expression sets a variance filter will be used before the creation of a heatmap.
+
+##The packages that need to be loaded are down below.
+
+```{r}
+biocLite("genefilter")
+library(genefilter)
+library(Biobase)
+```
+
+##Combine two expression sets (eset1controls, esets2controls) then make a heatmap.
+
+```{r}
+eset1.2controls<-combine(eset1controls, eset2controls)
+
+var.feset1.2controls<- varFilter(eset1.2controls, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+heatmapeset1.2controls<-heatmap(exprs(var.feset1.2controls[1:136]))
+```
+
+##Repeat steps for the other esets paired with eset1. 
+
+```{r}
+eset1.3controls<-combine(eset1controls, eset3controls)
+
+var.feset1.3controls<- varFilter(eset1.3controls, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+heatmapeset1.3controls<-heatmap(exprs(var.feset1.3controls[1:90]))
+```
+
+## Pair up esets 2 and 3.
+
+```{r}
+eset2.3controls<-combine(eset2controls,eset3controls)
+
+var.feset2.3controls<- varFilter(eset2.3controls, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+heatmapeset2.3controls<-heatmap(exprs(var.feset2.3controls[1:146]))
+```
+
+## The heatmaps should show up on the left under 'plots' and can be coverted to an image or pda. The batch effects should be very clear in the heatmaps. Combining all three expression sets in one heatmap can show the batch effects as well.  
+
+```{r}
+eset1.2.3controls<-combine(eset1controls,eset2controls,eset3controls)
+
+var.feset1.2.3controls<- varFilter(eset1.2.3controls, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+heatmapeset1.2.3controls<-heatmap(exprs(var.feset1.2.3controls[1:186]))
+```
+

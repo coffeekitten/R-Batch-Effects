@@ -8,7 +8,7 @@ output: html_document
 ## The two steps are to combine two datasets and make a heatmap. The code below will combine two of the expression sets. If batch effects are present there should be 'clusters' of different shades of color. If there is a lack of batch effects most of the data will have a similar coloration and should look like a near unified shade.
 
 ## The code below will establish what each eset looks like. 
-```{r}
+```{r,eval=FALSE}
 library(Biobase)
 heatmap(exprs(var.feset1[1:40]))
 ```
