@@ -12,7 +12,7 @@ eset2controls<-eset2[,as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
 
 ## The expression set "eset3" has normal samples every other column as well.
 
-eset3controls<-eset3
+eset3controls<-eset3[,as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
 
 ## Varaince filtering is done to the data to get rid of uninteresting data. Data that has no vairance or very little variance will not show up on a heat-map. The packages that will be used will be downloaded by the code below. 
 
