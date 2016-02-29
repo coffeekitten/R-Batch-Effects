@@ -1,0 +1,36 @@
+---
+title: "Filtering"
+author: "Jessica Phung"
+date: "February 19, 2016"
+output: html_document
+---
+##Filtering out the experimental data or non-normal data has to be done before any other filters are implimented. NCBI GEO is used to identify which coulmns are controls, the webpage should list which samples are "normal" in the links at bottom of each dataset's page. One of the datasets do not need to be filtered () due to the fact that all samples are "normal" as listed on NCBI GEO.   
+
+## The expression set "eset2" has normal samples every even column thus the code below will delete every noncontrol. 
+
+eset2controls<-eset2[,as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
+
+## The expression set "eset3" has normal samples every other column as well.
+
+eset3controls<-eset3
+
+## Varaince filtering is done to the data to get rid of uninteresting data. Data that has no vairance or very little variance will not show up on a heat-map. The packages that will be used will be downloaded by the code below. 
+
+biocLite("genefilter")
+
+library(genefilter)
+
+##"Variance Based Filtering The var.filter, var.func, var.cutoff and varByQuantile arguments control numerical cutoff-based filtering. Probes for which var.func returns NA are removed. The default var.func is IQR, which we here define as rowQ(eset, ceiling(0.75 * ncol(eset))) - rowQ(eset, floor(0.25 * ncol(eset))); this choice is motivated by the observation that unexpressed genes are detected most reliably through low variability of their features across samples. Additionally, IQR is robust to outliers (see note below). The default var.cutoff is 0.5 and is motivated by a rule of thumb that in many tissues only 40% of genes are expressed. Please adapt this value to your data and question"
+
+varFilter(eset, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+## This function should cut the data down from 3.4 Mb to 1.7 Mb. Apply this code to all of the esets. The data will be ready to use for visualization code afterwards.
+
+var.feset1<-varFilter(eset1, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+var.feset2<-varFilter(eset2, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+var.feset3<-varFilter(eset3, var.func=IQR, var.cutoff=0.5, filterByQuantile=TRUE)
+
+
+
