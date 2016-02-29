@@ -16,6 +16,7 @@ biocLite()
 
 ```{r}
 biocLite("GEOquery")
+library(GEOquery)
 ```
 
 ##The dataset below downloading expressionset data on lung tissue samples from Texas. The data will down load as a list. But it is important to format it into an expression set which will allow for easier data manipulation.This data has 40 normal samples.   
@@ -186,7 +187,7 @@ eset2controls<-eset2[,!as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
 ## The expression set "eset3" has normal samples every other column as well.
 
 ```{r}
-eset3controls<-eset3[,!as.logical(1:dim(eset2)[2] %% 2), drop=FALSE]
+eset3controls<-eset3[,!as.logical(1:dim(eset3)[2] %% 2), drop=FALSE]
 ```
 
 ## The three steps are to combine two datasets, filter the data, and make a heatmap. The code below will combine two of the expression sets. If batch effects are present there should be 'clusters' of different shades of color. If there is a lack of batch effects most of the data will have a similar coloration and should look like a near unified shade.
